@@ -185,5 +185,38 @@ router.get('/users', async (req, res) => {
 
 // TODO 2: Votre code ici
 
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+
+router.get('/google/callback', passport.authenticate('google', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/login?error=google_auth_failed` }), (req, res) => {
+  try {
+    const token = generateToken(req.user._id);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
+  } catch (error) {
+    res.redirect(`${process.env.FRONTEND_URL}/login?error=token_generation_failed`);
+  }
+});
+
+router.get('/discord', passport.authenticate('discord', { session: false }));
+
+router.get('/discord/callback', passport.authenticate('discord', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/login?error=discord_auth_failed` }), (req, res) => {
+  try {
+    const token = generateToken(req.user._id);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
+  } catch (error) {
+    res.redirect(`${process.env.FRONTEND_URL}/login?error=token_generation_failed`);
+  }
+});
+
+router.get('/github', passport.authenticate('github', { session: false }));
+
+router.get('/github/callback', passport.authenticate('github', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/login?error=github_auth_failed` }), (req, res) => {
+  try {
+    const token = generateToken(req.user._id);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
+  } catch (error) {
+    res.redirect(`${process.env.FRONTEND_URL}/login?error=token_generation_failed`);
+  }
+});
+
 
 module.exports = router;
